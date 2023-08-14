@@ -43,10 +43,10 @@ public class UsersController {
         return userService.create(user);
     }
 
-    @PutMapping (consumes = MediaType.APPLICATION_JSON_VALUE,
+    @PatchMapping (path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<User> updateUser(@RequestBody User user) {
-        return userService.update(user);
+    public Mono<User> updateUser(@RequestBody User user, @PathVariable Long id) {
+        return userService.update(user, id);
     }
 
     @DeleteMapping(path = "/{id}")
