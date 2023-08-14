@@ -5,8 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveTask;
 import java.nio.file.StandardOpenOption;
 
 class App {
@@ -53,6 +56,23 @@ class App {
             System.out.println("Oops! We have an exception - " + ex.getMessage());
             return "Unknown!";
         });
+    }
+
+ public static CompletableFuture<Long> getDirectorySize(String directory) {
+        if (directory == null) {
+            return CompletableFuture.failedFuture(new FileNotFoundException("Directory not found"));
+        }
+
+        Path directoryPath = Path.of(directory).toAbsolutePath().normalize();
+        if (Files.notExists(directoryPath) || !Files.isDirectory(directoryPath)) {
+            return CompletableFuture.failedFuture(new FileNotFoundException("Directory not found " + directory));
+        }
+
+        File[] files = directoryPath.toFile().listFiles();
+        if (files != null)
+            return CompletableFuture.supplyAsync(() -> Arrays.stream(files).mapToLong(File::length).sum());
+        else return CompletableFuture.failedFuture(new FileNotFoundException("Directory not found " + directory));
+
     }
     // END
 

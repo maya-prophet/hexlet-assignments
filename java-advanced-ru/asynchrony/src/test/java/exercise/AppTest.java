@@ -46,6 +46,14 @@ class AppTest {
     }
 
     // BEGIN
-    
+    @Test
+    void testDirectorySize() throws Exception {
+        CompletableFuture<Long> result = App.getDirectorySize(
+            "C:\\Users\\diver\\Downloads\\Java\\Java книги\\Liang Y.D\\Liang Y.D. - Introduction to Java Programming and Data Structures, Comprehensive Version, 12th edition - 2020\\code by chapter\\chapter6");
+        long size = result.get();
+
+
+        assertThat(size).isEqualTo(12373);
+    }
     // END
 }
